@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8">
+    <title>登录-智慧农业控制系统云平台</title>
+    <link rel="icon" href="images/favicon.ico" >
+    <link rel="stylesheet" href="/css/login.css">
+</head>
+
+<body>
+		<!-- {{ get_flashed_messages() }} -->
+    <div class="dowebok" id="dowebok">
+        <div class="form-container sign-in-container">
+            <form method="post" action="/login">
+            	<div class="head">
+            		<img src="images/admin.svg" alt="">
+            		<h1>登&nbsp;&nbsp;录</h1>
+            	</div>
+                <input type="text" name="username" placeholder="管理员账号" required>
+                <input type="password" name="password" placeholder="密码">
+                <button>登录</button>
+                <p class="login-tip">
+                    {% if get_flashed_messages()[0] != 'Please log in to access this page.' %} 
+                        {{ get_flashed_messages()[0] }}
+                    {% endif %}
+                </p>
+            </form>
+        </div>
+        <div class="overlay-container">
+            <div class="overlay">
+                <div class="overlay-panel overlay-right">
+                	<img style="width: 100%;" src="images/school_logo.png" alt="" />
+                    <h2>智慧农业控制系统云平台</h2>
+                    <p>学生毕设作品</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>智慧农业控制系统</title>
+	<link rel="stylesheet" type="text/css" href="css/style.css"/>
+	<link rel="stylesheet" type="text/css" href="css/button.css"/>
+	<link rel="stylesheet" type="text/css" href="css/animation.css"/>
+	<!-- <script src="js/echarts.min.js"></script> -->
+	<!-- <link rel="stylesheet" type="text/css" href="https://cdn.ztongyang.cn/css/animation.css"/> -->
+	<!-- <script src="https://cdn.ztongyang.cn/js/echarts.min.js"></script> -->
+	<script src="https://lib.baomitu.com/echarts/5.1.1/echarts.min.js"></script>
+	
+
+</head>
+<body>
+
+<div id="app" class="main wh-100">
+	<ul class="main-list">
+		<li>
+			<div class="l0 bg1">
+				<h4 class="title0">设备概况</h4>
+				<div class="device-box">
+					<div class="device-left">
+						<h3>设备总量：25台</h3>
+						<table>
+						  <tr>
+						    <th style="color: #1acb1a;">在线</th>
+						    <th style="color: orange;">离线</th>
+						    <th style="color: #aa1111;">故障</th>
+						  </tr>
+						  <tr>
+						    <td style="color: #1acb1a;">25</td>
+						    <td style="color: orange;">0</td>
+						    <td style="color: #aa1111;">0</td>
+						  </tr>
+						</table>
+					</div>
+					<div id="device-right" class="device-right"></div>
+				</div>
+			</div>
+			<div class="l1 bg1">
+				<h4 class="title1">温室环境监测</h4>
+				<div id="temp" class="pan"></div>
+				<div id="hum" class="pan"></div>
+				<div id="light" class="pan"></div>
+				<div id="co2" class="pan"></div>
+			</div>
+		</li>
+		<li style="width: 50%;">
+			<div class="head">
+				<h1 class="title">西北农林科技大学智慧农业控制系统云平台</h1>
+			</div>
+			<div class="video bg">
+				<div class="title2">实时视频监测</div>
+				<div class="vd">
+					<div id="dateStr" class="time"></div>
+					<canvas class="wh-100" id="videoCanvas">
+				</div>
+			</div>
+		</li>
+		<li class="">
+			<div class="rh">
+				<div class="point"><span><i style="background-image: url(images/point.svg);"></i></span>
+					<select class="wenshi" v-model="selected" @change='getValue'>
+					  <option v-for="option in options" :value="option.value">[[ option.text ]]</option>
+					</select>
+				</div>
+				<ul>
+					<li><a class="cursor md-trigger data" data-modal="data-panel" href="javascript:;" @click="startCharts(dateList[0])">数据详情</a></li>
+					<li><a class="data" href="/excel">数据导出</a></li>
+					<li><a class="exit" href="/logout">退出系统</a></li>
+				</ul>
+				</span>
+			</div>
+			<div class="weather bg1">
+				<h4 class="title5">天气情况</h4>
+				<div id="he-plugin-standard"></div>
+			</div>
+			<div class="warn bg1">
+				<h4 class="title5">告警信息</h4>
+				<div class="warn-box">
+					<div class="circle">
+					<span class="ring-style">
+						<item style="color: #f72828;font-size: 14px;">当前告警</item>
+						<item style="color: #fff;font-size: 14px;">1条</item>
+					</span></div>
+					<div class="detail">
+						<ul class="history">
+							<li style="color: #B10000;">一号温室温度传感器异常</li>
+							<li>一号温室温度传感器异常</li>
+							<li>一号温室温度传感器异常</li>
+							<li>一号温室温度传感器异常</li>
+							<li>一号温室温度传感器异常</li>
+							<li>一号温室温度传感器异常</li>
+							<li>一号温室温度传感器异常</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			<div class="device bg1">
+				<h4 class="title4">远程调控</h4>
+				<div class="checkbox">
+					<div class="light" >
+						<label class="switch">
+						  <input type="checkbox" :checked="checked1"/>
+						  <div class="button" @click="btnLight">
+							<div class="light"></div>
+							<div class="dots"></div>
+							<div class="characters"></div>
+							<div class="shine"></div>
+							<div class="shadow"></div>
+						  </div>
+						</label>
+						<span class="ctrlname">补光</span>
+					</div>
+					<div class="light">
+						<label class="switch">
+						  <input type="checkbox" />
+						  <div class="button">
+							<div class="light"></div>
+							<div class="dots"></div>
+							<div class="characters"></div>
+							<div class="shine"></div>
+							<div class="shadow"></div>
+						  </div>
+						</label>
+						<span class="ctrlname">通风</span>
+					</div>
+					<div class="light">
+						<label class="switch">
+						  <input type="checkbox" />
+						  <div class="button">
+							<div class="light"></div>
+							<div class="dots"></div>
+							<div class="characters"></div>
+							<div class="shine"></div>
+							<div class="shadow"></div>
+						  </div>
+						</label>
+						<span class="ctrlname">卷帘</span>
+					</div>
+					<div class="light">
+						<label class="switch">
+						  <input type="checkbox"/>
+						  <div class="button">
+							<div class="light"></div>
+							<div class="dots"></div>
+							<div class="characters"></div>
+							<div class="shine"></div>
+							<div class="shadow"></div>
+						  </div>
+						</label>
+						<span class="ctrlname">降温</span>
+					</div>
+				</div>
+			</div>
+		</li>
+	</ul>
+	<ul class="bottom-list">
+		<li class="b1 bg1">
+			<h4 class="title4">空气温度与湿度走势</h4>
+			<div id="atemp"></div>
+			<div id="ahum"></div>
+		</li>
+		<li class="bg1">
+			<h4 class="title4">土壤温度与湿度走势</h4>
+			<div id="stemp"></div>
+			<div id="shum"></div>
+		</li>
+		<li class="bg1">
+			<h4 class="title4">光照与CO2浓度走势</h4>
+			<div id="billu"></div>
+			<div id="bco2"></div>
+		</li>
+	</ul>
+	<div class="md-overlay" v-show="isMask" @click="removeMask"></div>
+	<div class="data-box md-modal md-effect-12" id="data-panel" aria-hidden="true">
+		<div class="md-content">
+			  <div class="data-panel">
+				  <a class="md-close" @click="removeMask"></a> 
+				  <div class="data-head">
+					<ul class="data-tab">
+						  <li v-for="item in options" :class="{active:item.show}" @click="switchTab(item.value)">[[ item.text ]]</li>
+					</ul>
+					<div class="date-select">
+						<span>选择日期：</span><select @change="draw($event)"><option v-for="date in dateList" :value="date">[[ date ]]</option></select> 
+					</div>
+				  </div>
+				  <div class="data-body">
+					  <ul class="data-list">
+						  <li v-for="item in options" :id="item.id" v-show="item.show">
+							<div class="his-chart" id="temperature"></div>
+							<div class="his-chart" id="humidity"></div>
+							<div class="his-chart" id="illumination"></div>
+							<div class="his-chart" id="carbon"></div>
+						  </li>
+					  </ul>
+				  </div>
+			  </div>
+		  </div>
+	</div>
+</div>
+
+<!-- <script src="https://cdn.ztongyang.cn/js/jsmpg.js"></script> -->
+<!-- <script src="https://cdn.ztongyang.cn/js/axios.min.js"></script> -->
+<!-- <script src="{{ url_for('static', filename='js/main.js') }}"></script> -->
+<!-- <script src="https://cdn.ztongyang.cn/js/vue.js"></script> -->
+<script src="https://lib.baomitu.com/socket.io/4.0.1/socket.io.min.js"></script>
+<script src="js/jsmpg.js"></script>
+<script src="js/axios.min.js"></script>
+<script src="js/vue.js"></script>
+<script src="js/run.js"></script>
+<script src="js/animation.js"></script>
+
+
+
+<script>
+WIDGET = {
+  "CONFIG": {
+    "layout": "1",
+    "width": "450",
+    "height": "130",
+    "background": "",
+    "dataColor": "FFFFFF",
+    "key": "ad6a6d24b91247e5b27535b4a79bac2d"
+  }
+}
+</script>
+<script src="https://widget.qweather.net/standard/static/js/he-standard-common.js?v=2.0"></script>
+</body>
+</html>
